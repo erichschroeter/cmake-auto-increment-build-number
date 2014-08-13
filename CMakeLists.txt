@@ -16,6 +16,7 @@ set(VERSION_META "-alpha")
 add_custom_command(
     OUTPUT ${GENERATE_OUTPUT}
     COMMAND gcc -o ${GENERATE_OUTPUT} ${GENERATE_SRCS}
+    DEPENDS ${GENERATE_SRCS}
     )
 
 add_custom_target(generate_version
