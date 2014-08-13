@@ -7,6 +7,10 @@ include_directories(${PROJECT_BINARY_DIR}/src)
 set(GENERATE_SRCS ${PROJECT_SOURCE_DIR}/generate.c)
 set(GENERATE_OUTPUT ${PROJECT_BINARY_DIR}/generate)
 set(VERSION_OUTPUT ${PROJECT_BINARY_DIR}/src/version.h)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 0)
+set(VERSION_META "-alpha")
 
 # Create command to compile the generate command
 add_custom_command(
@@ -15,7 +19,12 @@ add_custom_command(
     )
 
 add_custom_target(generate_version
-    COMMAND ${GENERATE_OUTPUT} -M 1 -m 0 -p 0 -a "-beta" > ${VERSION_OUTPUT}
+    COMMAND ${GENERATE_OUTPUT}
+        -M ${VERSION_MAJOR}
+	-m ${VERSION_MINOR}
+	-p ${VERSION_PATCH}
+	-a "${VERSION_META}"
+	> ${VERSION_OUTPUT}
     DEPENDS ${GENERATE_OUTPUT}
     VERBATIM
     )
