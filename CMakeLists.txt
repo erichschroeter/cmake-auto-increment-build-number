@@ -25,6 +25,8 @@ add_custom_target(generate_version
 	-m ${VERSION_MINOR}
 	-p ${VERSION_PATCH}
 	-a "${VERSION_META}"
+	-F "${PROJECT_BINARY_DIR}/buildnumber"
+	-i
 	> ${VERSION_OUTPUT}
     DEPENDS ${GENERATE_OUTPUT}
     VERBATIM
