@@ -1,4 +1,5 @@
 Pipfile.lock
+src/version.h
 
 # Prerequisites
 *.d

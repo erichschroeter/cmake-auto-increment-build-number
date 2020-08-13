@@ -6,24 +6,28 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_program(PipEnv pipenv REQUIRED)
 
-# Create command to compile the generate command
+# Create command to install the generate.py dependencies.
 add_custom_command(
     OUTPUT
-        ${CMAKE_SOURCE_DIR}/generate.py
+        Pipfile.lock
     COMMAND ${PipEnv} install
     COMMENT "Installing pipenv dependencies [${PipEnv} install]"
     DEPENDS
-        ${CMAKE_SOURCE_DIR}/generate.py
-        ${CMAKE_SOURCE_DIR}/Pipfile
+        Pipfile
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
     generate_version
-    COMMAND ${PipEnv} run ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/generate.py -o src/version.h config.json
-    COMMENT "Generating version header [${PipEnv} run ${CMAKE_SOURCE_DIR}/generate.py -o src/version.h config.json]"
+    COMMAND ${PipEnv} run ${Python3_EXECUTABLE} generate.py -o src/version.h config.json
+    COMMENT "Generating version header [${PipEnv} run ${CMAKE_CURRENT_SOURCE_DIR}/generate.py -o src/version.h config.json]"
     DEPENDS
-        ${CMAKE_SOURCE_DIR}/generate.py
-        ${CMAKE_SOURCE_DIR}/config.json
+        Pipfile.lock
+        generate.py
+        config.json
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_subdirectory(src)

@@ -47,7 +47,7 @@ def main():
         with open(argv['<config>']) as config_file:
             config = json.load(config_file)
             if argv['--output']:
-                with open(argv['--output']) as out:
+                with open(argv['--output'], 'w') as out:
                     write_version_header(out, config)
             else:
                 write_version_header(sys.stdout, config)
