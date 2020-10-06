@@ -1,27 +1,15 @@
 cmake_minimum_required(VERSION 2.8.5)
 project(example)
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
-
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_program(PipEnv pipenv REQUIRED)
 
-# Create command to install the generate.py dependencies.
 add_custom_command(
     OUTPUT
-        Pipfile.lock
-    COMMAND ${PipEnv} install
-    COMMENT "Installing pipenv dependencies [${PipEnv} install]"
-    DEPENDS
-        Pipfile
-    WORKING_DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-add_custom_target(
-    generate_version
-    COMMAND ${PipEnv} run ${Python3_EXECUTABLE} generate.py -o src/version.h config.json
-    COMMENT "Generating version header [${PipEnv} run ${CMAKE_CURRENT_SOURCE_DIR}/generate.py -o src/version.h config.json]"
+        ${PROJECT_SOURCE_DIR}/src/version.h
+        ${PROJECT_SOURCE_DIR}/src/version.c
+    COMMAND ${PipEnv} run ${Python3_EXECUTABLE} generate.py -o src/ config.json
+    COMMENT "Generating version code [${PipEnv} run generate.py -o src/ config.json]"
     DEPENDS
         Pipfile.lock
         generate.py
@@ -30,4 +18,9 @@ add_custom_target(
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_subdirectory(src)
+add_executable(
+    example
+    src/main.c
+    src/version.c
+)
+target_link_libraries(example version)
